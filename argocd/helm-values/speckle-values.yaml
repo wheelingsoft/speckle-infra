@@ -66,13 +66,31 @@ server:
   sessionSecret:
     secretName: speckle-session
     secretKey: secret
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
 
 frontend_2:
   enabled: true
   replicas: 1
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
 
 objects:
   replicas: 1
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
 
 # Disabled for dev — saves ~2 CPU cores and ~4 GB RAM
 preview_service:
@@ -80,6 +98,12 @@ preview_service:
 
 webhook_service:
   replicas: 1
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
 
 fileimport_service:
   replicas: 0
