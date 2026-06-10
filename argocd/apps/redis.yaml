@@ -7,16 +7,10 @@ metadata:
     - resources-finalizer.argocd.io
 spec:
   project: default
-  sources:
-    - repoURL: registry-1.docker.io/bitnamicharts
-      chart: redis
-      targetRevision: "21.2.10"
-      helm:
-        valueFiles:
-          - $values/argocd/helm-values/redis-values.yaml
-    - repoURL: https://github.com/wheelingsoft/speckle-infra
-      targetRevision: HEAD
-      ref: values
+  source:
+    repoURL: https://github.com/wheelingsoft/speckle-infra
+    targetRevision: HEAD
+    path: argocd/manifests/redis
   destination:
     server: https://kubernetes.default.svc
     namespace: redis
