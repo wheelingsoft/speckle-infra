@@ -1,0 +1,21 @@
+architecture: standalone
+
+auth:
+  enabled: true
+  existingSecret: redis-password
+  existingSecretPasswordKey: redis-password
+
+master:
+  persistence:
+    enabled: false  # Cache only — no persistence needed for dev
+
+replica:
+  replicaCount: 0
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

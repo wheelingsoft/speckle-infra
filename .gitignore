@@ -1,0 +1,11 @@
+# Terraform state and variable files with real values
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+
+# Filled-in secret files (keep only the .template originals)
+secrets/*.yaml
+!secrets/*.yaml.template
+

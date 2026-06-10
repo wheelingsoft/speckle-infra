@@ -1,0 +1,91 @@
+namespace: speckle
+create_namespace: false  # Created by ArgoCD syncOptions
+
+# --- UPDATE THESE after bootstrap ---
+# domain:          set to the ingress-nginx LoadBalancer IP + ".sslip.io"  (e.g. "1.2.3.4.sslip.io")
+# s3.publicEndpoint: set to "http://<MINIO_LB_IP>:9000"  (MinIO LoadBalancer IP)
+domain: "REPLACE_WITH_LB_IP.sslip.io"
+ssl_canonical_url: false   # HTTP only for dev
+cert_manager_issuer: ""    # Not used when ssl_canonical_url is false
+
+analytics:
+  enabled: false
+
+ingress:
+  enabled: true
+  namespace: ingress-nginx
+  controllerName: ingress-nginx
+
+db:
+  connectionString:
+    secretName: speckle-db
+    secretKey: connection-string
+  PGSSLMODE: require
+
+redis:
+  connectionString:
+    secretName: speckle-redis
+    secretKey: connection-string
+  networkPolicy:
+    inCluster:
+      enabled: true
+      kubernetes:
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: redis
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: redis
+
+s3:
+  endpoint: "http://minio.minio.svc.cluster.local:9000"   # internal — server-to-MinIO
+  publicEndpoint: "http://REPLACE_WITH_MINIO_LB_IP:9000"  # external — browser pre-signed URL base
+  bucket: speckle
+  access_key: speckle
+  secret_key:
+    secretName: speckle-s3
+    secretKey: secret_key
+  region: us-east-1
+  create_bucket: 'false'
+  networkPolicy:
+    port: "9000"
+    externalToCluster:
+      enabled: false
+    inCluster:
+      enabled: true
+      kubernetes:
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: minio
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: minio
+
+server:
+  replicas: 1
+  sessionSecret:
+    secretName: speckle-session
+    secretKey: secret
+
+frontend_2:
+  enabled: true
+  replicas: 1
+
+objects:
+  replicas: 1
+
+# Disabled for dev — saves ~2 CPU cores and ~4 GB RAM
+preview_service:
+  replicas: 0
+
+webhook_service:
+  replicas: 1
+
+fileimport_service:
+  replicas: 0
+
+ifc_import_service:
+  enabled: false
+
+monitoring:
+  replicas: 0

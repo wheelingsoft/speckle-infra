@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: speckle-server
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/specklesystems/speckle-server
+      targetRevision: main
+      path: utils/helm/speckle-server
+      helm:
+        valueFiles:
+          - $values/argocd/helm-values/speckle-values.yaml
+    - repoURL: https://github.com/wheelingsoft/speckle-infra
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: speckle
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

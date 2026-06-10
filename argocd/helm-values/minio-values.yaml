@@ -1,0 +1,25 @@
+auth:
+  rootUser: speckle
+  # Password comes from the minio-credentials secret (see secrets/minio-credentials.yaml.template)
+  existingSecret: minio-credentials
+  existingSecretPasswordKey: root-password
+
+defaultBuckets: speckle
+
+service:
+  type: LoadBalancer  # Needs a public IP so browsers can fetch pre-signed URLs directly
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+metrics:
+  enabled: false
